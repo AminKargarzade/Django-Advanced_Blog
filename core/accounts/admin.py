@@ -20,6 +20,16 @@ class CustomUserAdmin(UserAdmin):
                 'is_staff', 'is_superuser', 'is_active'
             ),
         }),
+        ('Group Permissions', {
+            'fields': (
+                'groups', 'user_permissions' 
+            ),
+        }),
+        ('Important Dates', {
+            'fields': (
+                'last_login',
+            ),
+        }),
     )
     add_fieldsets = (
         (None, {
