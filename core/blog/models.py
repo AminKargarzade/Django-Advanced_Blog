@@ -1,6 +1,10 @@
 from django.db import models
-
+from django.contrib.auth import get_user_model
 # Create your models here.
+
+# Getting User Model Object!
+User = get_user_model()
+
 class Post(models.Model):
     """This is a class to define posts for the blog app"""
     author = models.ForeignKey(User, on_delete=models.CASCADE)
