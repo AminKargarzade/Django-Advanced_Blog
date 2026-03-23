@@ -1,6 +1,6 @@
 from django.shortcuts import get_object_or_404, render
 from django.views.generic.base import TemplateView, RedirectView
-from django.views.generic import ListView, DetailView, FormView
+from django.views.generic import ListView, DetailView, FormView, CreateView
 from .forms import PostForm
 from .models import Post
 from django.shortcuts import get_object_or_404
@@ -60,7 +60,8 @@ class PostListView(ListView):
     
 class PostDetailView(DetailView):
     model = Post
-    
+   
+''' 
 class PostCreateView(FormView):
     template_name = 'contact.html'
     form_class = PostForm
@@ -69,3 +70,9 @@ class PostCreateView(FormView):
     def form_valid(self, form):
         form.save()
         return super().form_valid(form)
+'''
+class PostCreateView(CreateView):
+    model = Post
+    # fields = ['author', 'title', 'content', 'status', 'category', 'published_date'] You can do the same functionality with form classes
+    form_class = PostForm
+    success_url = '/blog/post/'
