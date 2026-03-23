@@ -1,6 +1,6 @@
 from django.shortcuts import get_object_or_404, render
 from django.views.generic.base import TemplateView, RedirectView
-from django.views.generic import ListView
+from django.views.generic import ListView, DetailView
 from .models import Post
 from django.shortcuts import get_object_or_404
 # Create your views here.
@@ -46,7 +46,7 @@ class RedirectToMaktab(RedirectView):
     def get_redirect_url(self, *args, **kwargs):
         return super().get_redirect_url(*args, **kwargs)
     
-class PostList(ListView):
+class PostListView(ListView):
     # model = Post  
     queryset = Post.objects.all() 
     context_object_name = 'posts'
@@ -57,4 +57,6 @@ class PostList(ListView):
     #     posts = Post.objects.filter(status=True)
     #     return posts
     
+class PostDetailView(DetailView):
+    model = Post
     
