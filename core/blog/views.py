@@ -1,6 +1,7 @@
 from django.shortcuts import get_object_or_404, render
 from django.views.generic.base import TemplateView, RedirectView
-from django.views.generic import ListView, DetailView
+from django.views.generic import ListView, DetailView, FormView
+from .forms import PostForm
 from .models import Post
 from django.shortcuts import get_object_or_404
 # Create your views here.
@@ -60,3 +61,11 @@ class PostListView(ListView):
 class PostDetailView(DetailView):
     model = Post
     
+class PostCreateView(FormView):
+    template_name = 'contact.html'
+    form_class = PostForm
+    success_url = '/blog/post/'
+    
+    def form_valid(self, form):
+        form.save()
+        return super().form_valid(form)
