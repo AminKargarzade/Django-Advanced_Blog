@@ -42,7 +42,7 @@ def postList(request):
 #         return Response({"detail":"post does not exist"}, status=status.HTTP_404_NOT_FOUND)
 #  You can do the same functionality with the way that I wrote down below!
 
-@api_view(["GET","PUT"])
+@api_view(["GET","PUT","DELETE"])
 def postDetail(request, id):
     post = get_object_or_404(Post,pk=id,status=True)
     if request.method == "GET":
@@ -53,3 +53,6 @@ def postDetail(request, id):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data)
+    elif request.method == "DELETE":
+        post.delete()
+        return Response({"detail":"item removed successfully"}, status=status.HTTP_204_NO_CONTENT)
