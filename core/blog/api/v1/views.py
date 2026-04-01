@@ -23,7 +23,7 @@ from django.shortcuts import get_object_or_404
 # More compact of this code below
 
 @api_view(["GET","POST"])
-@permission_classes([IsAdminUser])
+@permission_classes([IsAuthenticated])
 def postList(request):
     if request.method == "GET":
         posts = Post.objects.filter(status=True)
@@ -46,6 +46,7 @@ def postList(request):
 #  You can do the same functionality with the way that I wrote down below!
 
 @api_view(["GET","PUT","DELETE"])
+@permission_classes([IsAuthenticatedOrReadOnly])
 def postDetail(request, id):
     post = get_object_or_404(Post,pk=id,status=True)
     if request.method == "GET":
