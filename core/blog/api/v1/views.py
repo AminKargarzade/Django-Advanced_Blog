@@ -6,7 +6,8 @@ from ...models import Post
 from rest_framework import status
 from django.shortcuts import get_object_or_404
 from rest_framework.views import APIView
-from rest_framework.generics import CreateAPIView,ListAPIView,RetrieveAPIView,DestroyAPIView,UpdateAPIView
+from rest_framework.generics import GenericAPIView,ListAPIView,ListCreateAPIView
+from rest_framework import mixins
 
 # @api_view(["GET","POST"])
 # def postList(request):
@@ -67,7 +68,7 @@ def postDetail(request, id):
 #  You can do the same functionality with the way that I wrote down below!
         
 
-class PostList(APIView):
+'''class PostList(APIView):
     """getting a list of posts and creating new posts"""
     permission_classes = [IsAuthenticatedOrReadOnly]
     serializer_class = PostSerializer
@@ -83,7 +84,14 @@ class PostList(APIView):
         serializer = PostSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
-        return Response(serializer.data)    
+        return Response(serializer.data)'''
+        
+class PostList(ListCreateAPIView):
+    """getting a list of posts and creating new posts"""
+    permission_classes = [IsAuthenticatedOrReadOnly]
+    serializer_class = PostSerializer
+    queryset = Post.objects.filter(status=True)
+
 
 class PostDetail(APIView):
     """ getting detail of a post and edit plus removing it """
