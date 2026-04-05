@@ -1,3 +1,5 @@
+from ast import arg
+
 from rest_framework.permissions import IsAuthenticated,IsAuthenticatedOrReadOnly,IsAdminUser
 import rest_framework.permissions
 from rest_framework.response import Response
@@ -6,7 +8,7 @@ from ...models import Post
 from rest_framework import status
 from django.shortcuts import get_object_or_404
 from rest_framework.views import APIView
-from rest_framework.generics import GenericAPIView,ListAPIView,ListCreateAPIView
+from rest_framework.generics import ListCreateAPIView,RetrieveUpdateDestroyAPIView
 from rest_framework import mixins
 
 # @api_view(["GET","POST"])
@@ -93,6 +95,7 @@ class PostList(ListCreateAPIView):
     queryset = Post.objects.filter(status=True)
 
 
+'''
 class PostDetail(APIView):
     """ getting detail of a post and edit plus removing it """
     permission_classes = [IsAuthenticatedOrReadOnly]
@@ -117,3 +120,11 @@ class PostDetail(APIView):
         post = get_object_or_404(Post,pk=id,status=True)
         post.delete()
         return Response({"detail":"item removed successfully"}, status=status.HTTP_204_NO_CONTENT)
+'''
+
+class PostDetail(RetrieveUpdateDestroyAPIView):
+    """ getting detail of a post and edit plus removing it """
+    permission_classes = [IsAuthenticatedOrReadOnly]
+    serializer_class = PostSerializer
+    queryset = Post.objects.filter(status=True)
+    
