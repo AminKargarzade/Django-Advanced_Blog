@@ -1,8 +1,8 @@
 from rest_framework.permissions import IsAuthenticated,IsAuthenticatedOrReadOnly,IsAdminUser
 import rest_framework.permissions
 from rest_framework.response import Response
-from .serializers import PostSerializer
-from ...models import Post
+from .serializers import PostSerializer, CategorySerializer
+from ...models import Category, Post
 from rest_framework import status
 from django.shortcuts import get_object_or_404
 from rest_framework.views import APIView
@@ -128,28 +128,12 @@ class PostDetail(RetrieveUpdateDestroyAPIView):
     
     
 # Example for ViewSet in CBV
-class PostViewSet(viewsets.ViewSet):
+class PostModelViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticatedOrReadOnly]
     serializer_class = PostSerializer
     queryset = Post.objects.filter(status=True)
     
-    def list(self,request):
-        serializer = self.serializer_class(self.queryset,many=True)
-        return Response(serializer.data)
-    
-    def retrieve(self,request,pk=None):
-        post_object = get_object_or_404(self.queryset,pk=pk)
-        serializer = self.serializer_class(post_object)
-        return Response(serializer.data)
-    
-    def create(self,request):
-        pass
-    
-    def update(self,request,pk=None):
-        pass
-    
-    def partial_update(self,request,pk=None):
-        pass
-    
-    def destroy(self,request,pk=None):
-        pass
+class CategoryModelViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticatedOrReadOnly]
+    serializer_class = CategorySerializer
+    queryset = Category.objects.all()
