@@ -8,6 +8,7 @@ from django.shortcuts import get_object_or_404
 from rest_framework.views import APIView
 from rest_framework.generics import ListCreateAPIView,RetrieveUpdateDestroyAPIView
 from rest_framework import viewsets
+from rest_framework.decorators import action
 
 # @api_view(["GET","POST"])
 # def postList(request):
@@ -132,6 +133,10 @@ class PostModelViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticatedOrReadOnly]
     serializer_class = PostSerializer
     queryset = Post.objects.filter(status=True)
+    
+    # @action(methods=["get"],detail=False)
+    # def get_ok(self,request):
+    #     return Response({'detail':'OK!'})
     
 class CategoryModelViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticatedOrReadOnly]
