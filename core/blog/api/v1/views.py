@@ -11,6 +11,7 @@ from rest_framework import viewsets
 from rest_framework.decorators import action
 from .permissions import IsOwnerOrReadOnly
 from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.filters import SearchFilter
 
 # @api_view(["GET","POST"])
 # def postList(request):
@@ -135,8 +136,9 @@ class PostModelViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticatedOrReadOnly,IsOwnerOrReadOnly]
     serializer_class = PostSerializer
     queryset = Post.objects.filter(status=True)
-    filter_backends = [DjangoFilterBackend]
+    filter_backends = [DjangoFilterBackend,SearchFilter]
     filterset_fields = ['category','author','status']
+    search_fields = ['title','content']
         
     # @action(methods=["get"],detail=False)
     # def get_ok(self,request):
