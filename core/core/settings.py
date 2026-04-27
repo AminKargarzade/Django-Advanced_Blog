@@ -156,3 +156,6 @@ REST_FRAMEWORK = {
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ],
 }
+
+# Email Configurations
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
