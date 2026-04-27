@@ -4,9 +4,14 @@ python-decouple
 Pillow
 djangorestframework
 
+
 # 3rd party modules
 markdown 
 django-filter
 drf-yasg[validation]
+djangorestframework-simplejwt
 
 # Deployment modules
+
+# Email third party modules
+django-mail-templated
