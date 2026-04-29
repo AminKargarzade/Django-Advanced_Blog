@@ -18,6 +18,8 @@ from django.contrib.auth import get_user_model
 from ...models import Profile
 from mail_templated import EmailMessage
 from ..utils import EmailThread
+from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework_simplejwt.exceptions import AuthenticationFailed
 
 User = get_user_model()
 
@@ -29,7 +31,7 @@ class RegistrationApiView(generics.GenericAPIView):
         if serializer.is_valid():
             serializer.save()
             data = {
-                'email':serializer.validated_data['email']
+                'email':serializer.validated_data['email'] # type: ignore
             }
             return Response(data,status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -40,7 +42,7 @@ class CustomObtainAuthToken(ObtainAuthToken):
         serializer = self.serializer_class(data=request.data,
                                            context={'request': request})
         serializer.is_valid(raise_exception=True)
-        user = serializer.validated_data['user']
+        user = serializer.validated_data['user'] # type: ignore
         token, created = Token.objects.get_or_create(user=user)
         return Response({
             'token': token.key,
@@ -94,7 +96,15 @@ class ProfileApiView(generics.RetrieveUpdateAPIView):
 class TestEmailSend(generics.GenericAPIView):
     
     def get(self, request, *args, **kwargs):
-        email_obj = EmailMessage('email/hello.tpl', {'name': 'Amin'}, 'admin@admin.com', to=['aminkargarzadeh26@gmail.com'])
+        self.email = "bigdeli.ali3@gmail.com"
+        user_obj = get_object_or_404(User, email = self.email)
+        token = self.get_tokens_for_user(user_obj)
+        email_obj = EmailMessage('email/hello.tpl', {'token': token}, 'admin@admin.com', to=[self.email])
         EmailThread(email_obj).start()
-        
         return Response("Email Sent!")
+    
+    def get_tokens_for_user(self, user):
+        if not user.is_active:
+            raise AuthenticationFailed("User is not active")
+        refresh = RefreshToken.for_user(user)
+        return str(refresh.access_token)
