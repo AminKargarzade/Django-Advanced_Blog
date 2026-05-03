@@ -9,6 +9,8 @@ from .serializers import (
     ChangePasswordSerializer,
     ProfileSerializer,
     ActivationResendSerializer,
+    ResetPasswordSerializer,
+    ResetPasswordConfirmSerializer,
 )
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.authtoken.models import Token
@@ -24,6 +26,10 @@ from rest_framework_simplejwt.exceptions import AuthenticationFailed
 import jwt
 from jwt.exceptions import ExpiredSignatureError, InvalidSignatureError
 from django.conf import settings
+from django.contrib.auth.tokens import PasswordResetTokenGenerator
+from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
+from django.utils.encoding import force_str, force_bytes
+
 
 User = get_user_model()
 
@@ -159,3 +165,29 @@ class ActivationResendApiView(generics.GenericAPIView):
             raise AuthenticationFailed("User is not active")
         refresh = RefreshToken.for_user(user)
         return str(refresh.access_token)
+    
+class ResetPasswordApiView(generics.GenericAPIView):
+    serializer_class = ResetPasswordSerializer
+    
+    def post(self, request, *args, **kwargs):
+        serializer = ResetPasswordSerializer(data = request.data)
+        serializer.is_valid(raise_exception=True)
+        email = serializer.validated_data['email'] # type: ignore
+        user = serializer.validated_data['user'] # type: ignore
+        uid = urlsafe_base64_encode(force_bytes(user.id))
+        if user:
+            token = PasswordResetTokenGenerator().make_token(user)
+            email_obj = EmailMessage('email/reset_password.tpl', {'token': token, 'uid': uid}, 'admin@admin.com', to=[email])
+            EmailThread(email_obj).start()
+            return Response({"detail":"If the email exists, a reset link has been sent."}, status=status.HTTP_200_OK)
+        
+        
+class ResetPasswordConfirmApiView(generics.GenericAPIView):
+    serializer_class = ResetPasswordConfirmSerializer
+    
+    def post(self, request, uid, token, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data, context={"uid": uid, "token": token})
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+
+        return Response({"detail": "Password reset successfully"}, status=status.HTTP_200_OK)

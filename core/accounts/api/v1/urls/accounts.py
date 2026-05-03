@@ -22,6 +22,8 @@ urlpatterns = [
     path('change-password/', views.ChangePasswordApiView.as_view(), name="change-password"),
     
     # Reset password
+    path('reset-password/', views.ResetPasswordApiView.as_view(), name="reset-password"),
+    path('reset-password/confirm/<str:uid>/<str:token>', views.ResetPasswordConfirmApiView.as_view(), name="reset-password-confirm"),
     
     # Login Token
     path('token/login/', views.CustomObtainAuthToken.as_view(), name="token-login"),

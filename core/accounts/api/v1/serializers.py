@@ -5,6 +5,13 @@ from django.core import exceptions
 from django.contrib.auth import authenticate
 from django.utils.translation import gettext_lazy as _
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from django.contrib.auth import get_user_model
+from django.utils.http import urlsafe_base64_decode
+from django.utils.encoding import force_str
+from django.contrib.auth.tokens import PasswordResetTokenGenerator
+from django.contrib.auth.password_validation import validate_password
+
+User = get_user_model()
 
 class RegistrationSerializer(serializers.ModelSerializer):
     password1 = serializers.CharField(max_length=255,write_only=True)
@@ -111,3 +118,54 @@ class ActivationResendSerializer(serializers.Serializer):
             raise serializers.ValidationError({'detail':'User is already activated and verified!'})
         attrs['user'] = user_obj
         return super().validate(attrs)
+    
+class ResetPasswordSerializer(serializers.Serializer):
+    email = serializers.EmailField(required=True)
+    
+    def validate(self, attrs):
+        email = attrs.get('email')
+        user_obj = User.objects.get(email=email)
+        attrs['user'] = user_obj
+        return super().validate(attrs)
+    
+class ResetPasswordConfirmSerializer(serializers.Serializer):
+    password = serializers.CharField(write_only=True)
+    password1 = serializers.CharField(write_only=True)
+    
+    def validate(self, attrs):
+        password = attrs.get("password")
+        password1 = attrs.get("password1")
+        
+        # Check Password match!
+        if password != password1:
+            raise serializers.ValidationError({"detail": "Passwords do not match"})
+        
+        # Validate password strength (Django validators)
+        validate_password(password)
+        
+        # Get uid & token from context
+        uid = self.context.get("uid")
+        token = self.context.get("token")
+        
+        try:
+            user_id = force_str(urlsafe_base64_decode(uid)) # type: ignore
+            user = User.objects.get(id=user_id)
+        except Exception:
+            raise serializers.ValidationError({"detail": "Invalid UID"})
+        
+        # Check token
+        token_generator = PasswordResetTokenGenerator()
+        if not token_generator.check_token(user, token):
+            raise serializers.ValidationError({"detail": "Token is invalid or expired"})
+        
+        attrs["user"] = user
+        return attrs
+    
+    def save(self, **kwargs):
+        password = self.validated_data.get("password") # type: ignore
+        user = self.validated_data.get("user") # type: ignore
+
+        user.set_password(password) # type: ignore
+        user.save() # type: ignore
+        
+        return user
