@@ -11,7 +11,10 @@ from django.views.generic import (
 from .forms import PostForm
 from .models import Post
 from django.shortcuts import get_object_or_404
-from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.contrib.auth.mixins import (
+    LoginRequiredMixin,
+    PermissionRequiredMixin,
+)
 from django.http import HttpResponse
 
 # Create your views here.

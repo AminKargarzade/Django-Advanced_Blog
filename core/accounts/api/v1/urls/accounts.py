@@ -10,7 +10,11 @@ from rest_framework_simplejwt.views import (
 
 urlpatterns = [
     # Registration
-    path("registration/", views.RegistrationApiView.as_view(), name="registration"),
+    path(
+        "registration/",
+        views.RegistrationApiView.as_view(),
+        name="registration",
+    ),
     path("test-email/", views.TestEmailSend.as_view(), name="test-email"),
     # Activation
     path(
@@ -32,7 +36,9 @@ urlpatterns = [
     ),
     # Reset password
     path(
-        "reset-password/", views.ResetPasswordApiView.as_view(), name="reset-password"
+        "reset-password/",
+        views.ResetPasswordApiView.as_view(),
+        name="reset-password",
     ),
     path(
         "reset-password/confirm/<str:uid>/<str:token>",
@@ -40,10 +46,22 @@ urlpatterns = [
         name="reset-password-confirm",
     ),
     # Login Token
-    path("token/login/", views.CustomObtainAuthToken.as_view(), name="token-login"),
-    path("token/logout/", views.CustomDiscardAuthToken.as_view(), name="token-logout"),
+    path(
+        "token/login/",
+        views.CustomObtainAuthToken.as_view(),
+        name="token-login",
+    ),
+    path(
+        "token/logout/",
+        views.CustomDiscardAuthToken.as_view(),
+        name="token-logout",
+    ),
     # Login JWT
-    path("jwt/create/", views.CustomTokenObtainPairView.as_view(), name="jwt-create"),
+    path(
+        "jwt/create/",
+        views.CustomTokenObtainPairView.as_view(),
+        name="jwt-create",
+    ),
     path("jwt/refresh/", TokenRefreshView.as_view(), name="jwt-refresh"),
     path("jwt/verify/", TokenVerifyView.as_view(), name="jwt-verify"),
 ]
