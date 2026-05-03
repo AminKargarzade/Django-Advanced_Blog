@@ -27,7 +27,7 @@ from drf_yasg import openapi
 schema_view = get_schema_view(
     openapi.Info(
         title="Blog API",
-        default_version='v1',
+        default_version="v1",
         description="This is a test API for education purposes",
         terms_of_service="https://www.google.com/policies/terms/",
         contact=openapi.Contact(email="aminkargarzadeh26@gmail.com"),
@@ -39,18 +39,24 @@ schema_view = get_schema_view(
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path('api-auth/', include('rest_framework.urls')),
-    path("blog/", include('blog.urls')),
-    path('accounts/', include('accounts.urls')),
-    
-    
-    path("api-docs/", include_docs_urls(title='api sample')),
-    path('swagger/output.json', schema_view.without_ui(cache_timeout=0), name='schema-json'),
-    path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
-    path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
+    path("api-auth/", include("rest_framework.urls")),
+    path("blog/", include("blog.urls")),
+    path("accounts/", include("accounts.urls")),
+    path("api-docs/", include_docs_urls(title="api sample")),
+    path(
+        "swagger/output.json",
+        schema_view.without_ui(cache_timeout=0),
+        name="schema-json",
+    ),
+    path(
+        "swagger/",
+        schema_view.with_ui("swagger", cache_timeout=0),
+        name="schema-swagger-ui",
+    ),
+    path("redoc/", schema_view.with_ui("redoc", cache_timeout=0), name="schema-redoc"),
 ]
 
-#Serving static and media for development
+# Serving static and media for development
 if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

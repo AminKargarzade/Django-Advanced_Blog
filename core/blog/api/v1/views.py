@@ -1,18 +1,23 @@
-from rest_framework.permissions import IsAuthenticated,IsAuthenticatedOrReadOnly,IsAdminUser
+from rest_framework.permissions import (
+    IsAuthenticated,
+    IsAuthenticatedOrReadOnly,
+    IsAdminUser,
+)
 import rest_framework.permissions
 from rest_framework.response import Response
-from .serializers import PostSerializer, CategorySerializer
-from ...models import Category, Post
 from rest_framework import status
 from django.shortcuts import get_object_or_404
 from rest_framework.views import APIView
-from rest_framework.generics import ListCreateAPIView,RetrieveUpdateDestroyAPIView
+from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework import viewsets
 from rest_framework.decorators import action
-from .permissions import IsOwnerOrReadOnly
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework.filters import SearchFilter,OrderingFilter
+from rest_framework.filters import SearchFilter, OrderingFilter
+
 from .paginations import DefaultPagination
+from .serializers import PostSerializer, CategorySerializer
+from ...models import Category, Post
+from .permissions import IsOwnerOrReadOnly
 
 # @api_view(["GET","POST"])
 # def postList(request):
@@ -61,7 +66,7 @@ def postDetail(request, id):
         post.delete()
         return Response({"detail":"item removed successfully"}, status=status.HTTP_204_NO_CONTENT)
         """
-        
+
 # @api_view()
 # def postDetail(request, id):
 #     try:
@@ -71,7 +76,7 @@ def postDetail(request, id):
 #     except Post.DoesNotExist:
 #         return Response({"detail":"post does not exist"}, status=status.HTTP_404_NOT_FOUND)
 #  You can do the same functionality with the way that I wrote down below!
-        
+
 
 '''class PostList(APIView):
     """getting a list of posts and creating new posts"""
@@ -90,9 +95,11 @@ def postDetail(request, id):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data)'''
-        
+
+
 class PostList(ListCreateAPIView):
     """getting a list of posts and creating new posts"""
+
     permission_classes = [IsAuthenticatedOrReadOnly]
     serializer_class = PostSerializer
     queryset = Post.objects.filter(status=True)
@@ -125,28 +132,35 @@ class PostDetail(APIView):
         return Response({"detail":"item removed successfully"}, status=status.HTTP_204_NO_CONTENT)
 '''
 
+
 class PostDetail(RetrieveUpdateDestroyAPIView):
-    """ getting detail of a post and edit plus removing it """
+    """getting detail of a post and edit plus removing it"""
+
     permission_classes = [IsAuthenticatedOrReadOnly]
     serializer_class = PostSerializer
     queryset = Post.objects.filter(status=True)
-    
-    
+
+
 # Example for ViewSet in CBV
 class PostModelViewSet(viewsets.ModelViewSet):
-    permission_classes = [IsAuthenticatedOrReadOnly,IsOwnerOrReadOnly]
+    permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
     serializer_class = PostSerializer
     queryset = Post.objects.filter(status=True)
-    filter_backends = [DjangoFilterBackend,SearchFilter,OrderingFilter]
-    filterset_fields = {'category':["exact","in"],'author':["exact"],'status':["exact"]}
-    search_fields = ['title','content']
-    ordering_fields = ['published_date']
+    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
+    filterset_fields = {
+        "category": ["exact", "in"],
+        "author": ["exact"],
+        "status": ["exact"],
+    }
+    search_fields = ["title", "content"]
+    ordering_fields = ["published_date"]
     pagination_class = DefaultPagination
-        
+
     # @action(methods=["get"],detail=False)
     # def get_ok(self,request):
     #     return Response({'detail':'OK!'})
-    
+
+
 class CategoryModelViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticatedOrReadOnly]
     serializer_class = CategorySerializer
