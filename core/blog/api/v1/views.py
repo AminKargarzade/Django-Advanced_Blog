@@ -1,19 +1,11 @@
 from rest_framework.permissions import (
-    IsAuthenticated,
     IsAuthenticatedOrReadOnly,
-    IsAdminUser,
 )
-import rest_framework.permissions
-from rest_framework.response import Response
-from rest_framework import status
-from django.shortcuts import get_object_or_404
-from rest_framework.views import APIView
 from rest_framework.generics import (
     ListCreateAPIView,
     RetrieveUpdateDestroyAPIView,
 )
 from rest_framework import viewsets
-from rest_framework.decorators import action
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter, OrderingFilter
 
@@ -52,7 +44,7 @@ def postList(request):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data)
-        
+
 @api_view(["GET","PUT","DELETE"])
 @permission_classes([IsAuthenticatedOrReadOnly])
 def postDetail(request, id):
@@ -85,13 +77,13 @@ def postDetail(request, id):
     """getting a list of posts and creating new posts"""
     permission_classes = [IsAuthenticatedOrReadOnly]
     serializer_class = PostSerializer
-    
+
     def get(self,request):
         """retrieving a list of posts"""
         posts = Post.objects.filter(status=True)
         serializer = PostSerializer(posts, many=True)
         return Response(serializer.data)
-    
+
     def post(self,request):
         """creating a post with provided data"""
         serializer = PostSerializer(data=request.data)
@@ -113,13 +105,13 @@ class PostDetail(APIView):
     """ getting detail of a post and edit plus removing it """
     permission_classes = [IsAuthenticatedOrReadOnly]
     serializer_class = PostSerializer
-    
+
     def get(self,request,id):
         """ retrieving the post data """
         post = get_object_or_404(Post,pk=id,status=True)
         serializer = self.serializer_class(post)
         return Response(serializer.data)
-    
+
     def put(self,request,id):
         """ editing the post data """
         post = get_object_or_404(Post,pk=id,status=True)
@@ -127,7 +119,7 @@ class PostDetail(APIView):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data)
-    
+
     def delete(self,request,id):
         """ deleting a post """
         post = get_object_or_404(Post,pk=id,status=True)

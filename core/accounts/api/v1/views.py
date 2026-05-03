@@ -27,8 +27,8 @@ import jwt
 from jwt.exceptions import ExpiredSignatureError, InvalidSignatureError
 from django.conf import settings
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
-from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
-from django.utils.encoding import force_str, force_bytes
+from django.utils.http import urlsafe_base64_encode
+from django.utils.encoding import force_bytes
 
 
 User = get_user_model()
@@ -72,9 +72,7 @@ class CustomObtainAuthToken(ObtainAuthToken):
         serializer.is_valid(raise_exception=True)
         user = serializer.validated_data["user"]  # type: ignore
         token, created = Token.objects.get_or_create(user=user)
-        return Response(
-            {"token": token.key, "user_id": user.pk, "email": user.email}
-        )
+        return Response({"token": token.key, "user_id": user.pk, "email": user.email})
 
 
 class CustomDiscardAuthToken(APIView):
@@ -104,9 +102,7 @@ class ChangePasswordApiView(generics.GenericAPIView):
 
         if serializer.is_valid():
             # Check old password
-            if not self.object.check_password(
-                serializer.data.get("old_password")
-            ):
+            if not self.object.check_password(serializer.data.get("old_password")):
                 return Response(
                     {"old_password": ["Wrong password."]},
                     status=status.HTTP_400_BAD_REQUEST,
@@ -158,9 +154,7 @@ class ActivationApiView(APIView):
 
     def get(self, request, token, *args, **kwargs):
         try:
-            token = jwt.decode(
-                token, settings.SECRET_KEY, algorithms=["HS256"]
-            )
+            token = jwt.decode(token, settings.SECRET_KEY, algorithms=["HS256"])
             user_id = token.get("user_id")
         except ExpiredSignatureError:
             return Response(
@@ -175,9 +169,7 @@ class ActivationApiView(APIView):
         user_obj = User.objects.get(pk=user_id)
 
         if user_obj.is_verified:  # type: ignore
-            return Response(
-                {"detail": "Your account has already been verified!"}
-            )
+            return Response({"detail": "Your account has already been verified!"})
         user_obj.is_verified = True  # type: ignore
         user_obj.save()
         return Response(
@@ -233,9 +225,7 @@ class ResetPasswordApiView(generics.GenericAPIView):
             )
             EmailThread(email_obj).start()
             return Response(
-                {
-                    "detail": "If the email exists, a reset link has been sent."
-                },
+                {"detail": "If the email exists, a reset link has been sent."},
                 status=status.HTTP_200_OK,
             )
 

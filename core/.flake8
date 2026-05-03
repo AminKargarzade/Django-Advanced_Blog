@@ -10,6 +10,8 @@ exclude =
     settings.py,
     __init__,
     __init__.py,
+    test,
+    tests.py
 
 ignore =
     E501

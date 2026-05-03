@@ -9,9 +9,7 @@ class Profile(models.Model):
     Profile model that extends the User model with additional fields.
     """
 
-    user = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name="profile"
-    )
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="profile")
     first_name = models.CharField(max_length=250, blank=True)
     last_name = models.CharField(max_length=250, blank=True)
     image = models.ImageField(blank=True, null=True)
