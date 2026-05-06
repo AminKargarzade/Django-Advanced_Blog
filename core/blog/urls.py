@@ -4,7 +4,8 @@ from . import views
 app_name = "blog"
 
 urlpatterns = [
-    path("cbv-index", views.IndexView.as_view(), name="cbv-index"),
+    # path("cbv-index", views.IndexView.as_view(), name="cbv-index"),
+    path("", views.IndexView.as_view(), name="index"),
     path(
         "go-to-maktabkhooneh/<int:pk>/",
         views.RedirectToMaktab.as_view(),
