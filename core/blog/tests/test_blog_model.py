@@ -2,25 +2,27 @@ from django.test import TestCase
 from datetime import datetime
 
 from ..models import Post, Category
-from django.contrib.auth import get_user_model
 from accounts.models import User, Profile
 
 class TestPostModel(TestCase):
-    
-    def test_create_post_with_valid_data(self):
-        user = User.objects.create_user(email="test@test.com", password="a/@1234567") # type: ignore
-        profile = Profile.objects.create(
-            user = user,
+    def setUp(self):
+        self.user = User.objects.create_user(email="test@test.com", password="a/@1234567") # type: ignore
+        self.profile = Profile.objects.create(
+            user = self.user,
             first_name = "test_first_name",
             last_name = "test_last_name",
             description = "test_description",
         )
+        
+    def test_create_post_with_valid_data(self):
+        
         post = Post.objects.create(
-            author = profile,
+            author = self.profile,
             title = "test",
             content = "description",
             status = True,
             category = None,
             published_date = datetime.now(),
         )
+        self.assertTrue(Post.objects.filter(pk=post.id).exists()) # type: ignore
         self.assertEqual(post.title, "test")
