@@ -3,6 +3,7 @@ from django.urls import reverse
 import pytest
 from datetime import datetime
 
+
 @pytest.mark.django_db
 class TestPostApi:
     client = APIClient()
@@ -20,5 +21,6 @@ class TestPostApi:
             "status" : True,
             "published_date" : datetime.now()
         }
+        self.client.force_authenticate(user={})
         response = self.client.post(url, data)
         assert response.status_code == 401  # type: ignore
