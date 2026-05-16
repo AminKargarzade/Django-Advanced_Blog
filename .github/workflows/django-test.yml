@@ -1,4 +1,5 @@
 name: Django Project Test
+
 on:
   push:
     branches: [ "main" ]
@@ -13,5 +14,7 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-    - name: Test Output
-      run: false
+    - name: Setup Docker-Compose
+      run: docker-compose up -d
+    - name: Run Tests
+      run: docker exec backend sh -c "flake8 && pytest ."
