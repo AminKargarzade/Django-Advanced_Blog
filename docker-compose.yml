@@ -40,7 +40,7 @@ services:
      - "8089:8089"
     volumes:
       - ./core/locust:/mnt/locust
-    command: -f /mnt/locust/locustfile.py --master -H http://backend:8089
+    command: -f /mnt/locust/locustfile.py --master -H http://backend:8000
   
   worker:
     image: docker.arvancloud.ir/locustio/locust:latest
