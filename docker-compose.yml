@@ -34,5 +34,19 @@ services:
 
       - ServerOptions__HostName=smtp4dev
 
+  master:
+    image: docker.arvancloud.ir/locustio/locust:latest
+    ports:
+     - "8089:8089"
+    volumes:
+      - ./core/locust:/mnt/locust
+    command: -f /mnt/locust/locustfile.py --master -H http://backend:8089
+  
+  worker:
+    image: docker.arvancloud.ir/locustio/locust:latest
+    volumes:
+      - ./core/locust:/mnt/locust
+    command: -f /mnt/locust/locustfile.py --worker --master-host master
+
 volumes:
   smtp4dev-data:
