@@ -174,3 +174,6 @@ EMAIL_HOST_PASSWORD = ""
 EMAIL_PORT = 25
 
 CORS_ALLOW_ALL_ORIGINS = True
+
+# Celery Configs
+CELERY_BROKER_URL = 'redis://redis:6379/1' # The /1 represents that which database you wanna use?
