@@ -3,7 +3,6 @@ from rest_framework.response import Response
 from rest_framework import generics
 from rest_framework import status
 from .serializers import (
-    CustomAuthTokenSerializer,
     RegistrationSerializer,
     CustomTokenObtainPairSerializer,
     ChangePasswordSerializer,
@@ -12,8 +11,8 @@ from .serializers import (
     ResetPasswordSerializer,
     ResetPasswordConfirmSerializer,
 )
-from rest_framework.authtoken.views import ObtainAuthToken
-from rest_framework.authtoken.models import Token
+
+# from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 from rest_framework_simplejwt.views import TokenObtainPairView
@@ -29,7 +28,6 @@ from django.conf import settings
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from django.utils.http import urlsafe_base64_encode
 from django.utils.encoding import force_bytes
-
 
 User = get_user_model()
 
@@ -62,17 +60,17 @@ class RegistrationApiView(generics.GenericAPIView):
         return str(refresh.access_token)
 
 
-class CustomObtainAuthToken(ObtainAuthToken):
-    serializer_class = CustomAuthTokenSerializer
+# class CustomObtainAuthToken(ObtainAuthToken):
+#     serializer_class = CustomAuthTokenSerializer
 
-    def post(self, request, *args, **kwargs):
-        serializer = self.serializer_class(
-            data=request.data, context={"request": request}
-        )
-        serializer.is_valid(raise_exception=True)
-        user = serializer.validated_data["user"]  # type: ignore
-        token, created = Token.objects.get_or_create(user=user)
-        return Response({"token": token.key, "user_id": user.pk, "email": user.email})
+#     def post(self, request, *args, **kwargs):
+#         serializer = self.serializer_class(
+#             data=request.data, context={"request": request}
+#         )
+#         serializer.is_valid(raise_exception=True)
+#         user = serializer.validated_data["user"]  # type: ignore
+#         token, created = Token.objects.get_or_create(user=user)
+#         return Response({"token": token.key, "user_id": user.pk, "email": user.email})
 
 
 class CustomDiscardAuthToken(APIView):

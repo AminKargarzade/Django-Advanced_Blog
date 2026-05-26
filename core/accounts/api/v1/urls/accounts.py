@@ -3,6 +3,7 @@ from .. import views
 
 # from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework_simplejwt.views import (
+    TokenObtainPairView,
     TokenRefreshView,
     TokenVerifyView,
 )
@@ -45,11 +46,11 @@ urlpatterns = [
         name="reset-password-confirm",
     ),
     # Login Token
-    path(
-        "token/login/",
-        views.CustomObtainAuthToken.as_view(),
-        name="token-login",
-    ),
+    # path(
+    #     "token/login/",
+    #     views.CustomObtainAuthToken.as_view(),
+    #     name="token-login",
+    # ),
     path(
         "token/logout/",
         views.CustomDiscardAuthToken.as_view(),
@@ -61,6 +62,7 @@ urlpatterns = [
         views.CustomTokenObtainPairView.as_view(),
         name="jwt-create",
     ),
+    path("token/", TokenObtainPairView.as_view(), name="token_obtain_pair"),
     path("jwt/refresh/", TokenRefreshView.as_view(), name="jwt-refresh"),
     path("jwt/verify/", TokenVerifyView.as_view(), name="jwt-verify"),
 ]
