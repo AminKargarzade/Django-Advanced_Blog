@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     "mail_templated",
     "djoser",
     "corsheaders",
+    "django_celery_beat",
 ]
 
 MIDDLEWARE = [
@@ -179,3 +180,10 @@ CORS_ALLOW_ALL_ORIGINS = True
 CELERY_BROKER_URL = (
     "redis://redis:6379/1"  # The /1 represents that which database you wanna use?
 )
+
+# CELERY_BEAT_SCHEDULE = {
+#     'send_email': {
+#         'task': 'accounts.tasks.sendEmail',
+#         'schedule': 5.0  # every 5 seconds
+#     }
+# } # First way of scheduling tasks using Celery Beat
