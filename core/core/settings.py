@@ -187,3 +187,11 @@ CELERY_BROKER_URL = (
 #         'schedule': 5.0  # every 5 seconds
 #     }
 # } # First way of scheduling tasks using Celery Beat
+
+# Caching Configurations
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://redis:6379/2",
+    }
+}
