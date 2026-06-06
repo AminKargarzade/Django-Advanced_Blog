@@ -13,7 +13,6 @@ from drf_yasg.utils import swagger_auto_schema
 from .serializers import WeatherSerializer
 from weather.services import WeatherService
 
-
 logger = logging.getLogger(__name__)
 
 

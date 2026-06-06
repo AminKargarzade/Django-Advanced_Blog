@@ -21,6 +21,6 @@ app.autodiscover_tasks()
 # @app.on_after_configure.connect # type: ignore
 # def setup_periodic_tasks(sender: Celery, **kwargs):
 #     # Calls sendEmail() every 5 seconds.
-#     sender.add_periodic_task(5.0, sendEmail.s(), name='send email every 5 seconds') 
-# #This was the second way of 
+#     sender.add_periodic_task(5.0, sendEmail.s(), name='send email every 5 seconds')
+# #This was the second way of
 # scheduling tasks using Celery Beat, without using the CELERY_BEAT_SCHEDULE setting in settings.py

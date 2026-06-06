@@ -18,23 +18,24 @@ from django.conf import settings
 #         else:
 #             return None
 
+
 class WeatherService:
-    
+
     BASE_URL = "https://api.openweathermap.org/data/2.5/weather"
-    
+
     @classmethod
     def get_weather(cls, city):
-        
+
         response = requests.get(
             cls.BASE_URL,
             params={
                 "q": city,
                 "appid": settings.OPENWEATHERMAP_API_KEY,
-                "units": "metric"
+                "units": "metric",
             },
             timeout=10,
         )
-        
+
         response.raise_for_status()
-        
+
         return response.json()
