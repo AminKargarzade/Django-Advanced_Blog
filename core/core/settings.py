@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "accounts",
     "blog",
+    "weather",
     "rest_framework",
     "rest_framework.authtoken",
     "django_filters",
@@ -195,3 +196,5 @@ CACHES = {
         "LOCATION": "redis://redis:6379/2",
     }
 }
+
+OPENWEATHERMAP_API_KEY = config("OPENWEATHERMAP_API_KEY", default="")
