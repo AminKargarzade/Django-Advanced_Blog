@@ -26,7 +26,10 @@ class WeatherAPIView(APIView):
         required=True,
     )
 
-    @swagger_auto_schema(manual_parameters=[city_param])
+    @swagger_auto_schema(
+        manual_parameters=[city_param],
+        tags=["🌤 Weather"],
+    )
     def get(self, request):
 
         serializer = WeatherSerializer(data=request.query_params)
