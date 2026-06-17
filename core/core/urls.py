@@ -38,10 +38,12 @@ schema_view = get_schema_view(
     permission_classes=[permissions.AllowAny],
 )
 
+
 def indexView(request):
     from django.http import HttpResponse
 
     return HttpResponse("<h1>Welcome to the Blog API! (index page)</h1>")
+
 
 urlpatterns = [
     path("admin/", admin.site.urls),
