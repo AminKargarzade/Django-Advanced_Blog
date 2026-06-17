@@ -38,11 +38,17 @@ schema_view = get_schema_view(
     permission_classes=[permissions.AllowAny],
 )
 
+def indexView(request):
+    from django.http import HttpResponse
+
+    return HttpResponse("<h1>Welcome to the Blog API! (index page)</h1>")
+
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("api-auth/", include("rest_framework.urls")),
     path("blog/", include("blog.urls")),
     path("accounts/", include("accounts.urls")),
+    path("", indexView, name="index"),
     # path("api-docs/", include_docs_urls(title="api sample")),
     path(
         "swagger/output.json",
