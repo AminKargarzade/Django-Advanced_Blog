@@ -42,7 +42,7 @@ schema_view = get_schema_view(
 def indexView(request):
     from django.http import HttpResponse
 
-    return HttpResponse("<h1>Welcome to the Blog API! (index page)</h1>")
+    return HttpResponse("<h1>(Django Final Test!) Check it out when you buy VPS!</h1>")
 
 
 urlpatterns = [
