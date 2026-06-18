@@ -38,3 +38,4 @@ jobs:
           git pull
           docker-compose -f docker-compose-stage.yml restart
       # Add your deployment commands here, e.g., SSH into the server and pull the latest changes
+      # I added the auto deploy script in the previous commit, so you can just run the script here
