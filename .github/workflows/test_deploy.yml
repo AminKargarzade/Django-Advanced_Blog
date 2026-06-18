@@ -19,7 +19,7 @@ jobs:
       run: docker exec backend sh -c "flake8 && pytest ."
 
   Deploy:
-    if: ${{ always() && contains(join(needs.*.result, ','), 'success') }}
+    if: ${{ always() && contains(join(needs.*.result, ','), 'success') }} # the deploy job will run if the test job is successful
     name: Deploy
     needs: Test
     runs-on: ubuntu-latest
